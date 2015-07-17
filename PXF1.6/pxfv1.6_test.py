@@ -1,6 +1,9 @@
 import os
 import time
 
+
+#---- SENSOR TEST USING ARDUCOPTER ----#
+
 #OK, creates file with output of ArduCopter
 print "Open"
 f=os.popen('./ArduCopter_3IMU.elf > test_out.txt')
@@ -33,7 +36,16 @@ if 'Bad CRC on MS5611' in open('test_out.txt').read():
 if 'Ready to FLY' in open('test_out.txt').read():
 	print "MPU6000 ok, MPU02950 OK, LSM9D OK, MS5611 OK"
 
+print "End if"
+#Kill ArduCOpter, after txt
+f=os.popen('killall -9 ./ArduCopter_3IMU.elf')
+print "ArduCopter killed"
 
-#destroy txt
-#os.popen('rm test_out.txt')
-os.popen('killall -9 ./ArduCopter_3IMU.elf')
+f=os.popen('rm test_out.txt')
+
+print "End sensor tests"
+
+#--- OK UNTIL HERE ---#
+# HOW TO WRITE screen into txt??
+f=os.popen('screen /dev/ttyO5 > ttyO5.txt')
+
