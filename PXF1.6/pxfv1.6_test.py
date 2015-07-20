@@ -1,11 +1,13 @@
+#!/usr/bin/python
+
 import os
 import time
-
+import sys
 
 #---- SENSOR TEST USING ARDUCOPTER ----#
 
 #OK, creates file with output of ArduCopter
-print "Open"
+#print "Open"
 f=os.popen('./ArduCopter_3IMU.elf > test_out.txt')
 
 #TEST cases
@@ -45,7 +47,38 @@ f=os.popen('rm test_out.txt')
 
 print "End sensor tests"
 
-#--- OK UNTIL HERE ---#
-# HOW TO WRITE screen into txt??
-f=os.popen('screen /dev/ttyO5 > ttyO5.txt')
 
+#----- I2C test ----#
+print "Test I2C"
+f=os.popen('i2cdetect -r -y 1 > i2ctest.txt')
+# NOT working
+if ' 1e ' in open('i2ctest.txt').read():
+        print "I2C Funciona OK"
+else: print "I2C NO funciona" 
+
+
+#print "Conecta el cable de 6 pinea al TTYO5 y pulse INTRO..."
+
+#How to get input from user?? Facing errrors...
+#text = sys.stdin.read() 
+#print text
+#print (raw_input('Conecta el cable de 6 pines al conector ttyO5, pulsa INTRO...'))
+#entrada = raw_input()
+#print entrada
+#---------------------#
+
+f=os.popen('cat /dev/ttyO5 > ttyO5.txt')
+time.sleep(15)
+f=os.popen('killall -9 cat')
+if os.stat("ttyO5.txt").st_size==0:
+	print "Revisar ttyO5"
+
+f=os.popen('rm ttyO5.txt')
+
+f=os.popen('cat /dev/ttyO4 > ttyO4.txt')
+time.sleep(15)
+f=os.popen('killall -9 cat')
+if os.stat("ttyO4.txt").st_size==0:
+        print "Revisar ttyO4"
+
+f=os.popen('rm ttyO4.txt')
