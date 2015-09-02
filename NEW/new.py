@@ -4,6 +4,7 @@ import os
 import time
 import sys
 
+from termcolor import colored
 #------- I2Ctest --------#
 print(' ')
 print ('Conecte el GPS al conector I2C (4 pins) y el conector serial (6 pines) al UART...')
@@ -12,7 +13,9 @@ print(' y pulsa INTRO ...')
 print (' ')
 
 key=sys.stdin.read(1)
+print('--------------------------')
 print('Detectando sensores I2C...')
+print('--------------------------')
 
 f=os.popen('i2cdetect -y 1 > i2ctest.txt')
 time.sleep(2)
@@ -29,10 +32,10 @@ while line!="":
              	line=file.readline()
 
 if validate==0:
-        print '+ I2C EXTERNO OK'
+        print colored('+ I2C EXTERNO OK','green')
 	print (' ')
 else:
-        print '+ REVISAR PCA9306-U303'
+        print colored('+ REVISAR PCA9306-U303','red')
 	print (' ')
 b = '40'
 file=open('i2ctest.txt','r')
@@ -46,10 +49,10 @@ while line!="":
                 line=file.readline()
 
 if validate==0:
-        print '+ PCA9685 detectado'
+        print colored('+ PCA9685 detectado', 'green')
 	print (' ')
 else:
-        print '+ REVISAR PCA9685-U706, no detectado!'
+        print colored('+ REVISAR PCA9685-U706, no detectado!','red')
 	print (' ')
 b = '48'
 file=open('i2ctest.txt','r')
@@ -63,34 +66,42 @@ while line!="":
                 line=file.readline()
 
 if validate==0:
-        print '+ ADS1115 detectado'
+        print colored('+ ADS1115 detectado','green')
 	print (' ')
 else:
-        print '+ REVISAR ADS1115-U404, no detectado'
+        print colored('+ REVISAR ADS1115-U404, no detectado','red')
 	print (' ')
+print('-----------------------------')
 print('Fin detección de sensores I2C')
+print('------------------------------')
 print (' ')
 
 #---------- UART ---------#
 #print ('Conecta el cable de 6 pines al conector UART, y pulsa INTRO...')
 
 #key=sys.stdin.read(1)
-print (' Test de conector Serial...')
+print('----------------------------')
+print(' Test de conector Serial...')
+print('----------------------------')
 print (' ')
 
 f=os.popen('sudo cat /dev/ttyAMA0 > ttyAMA0.txt')
 time.sleep(8)
 f=os.popen('sudo killall -9 cat 2> /dev/null')
 if os.stat("ttyAMA0.txt").st_size==0:
-        print "+ Revisar UART"
+        print colored('+ Revisar UART','red')
 else:
-        print "+ UART OK"
+        print colored('+ UART OK','green')
 print (' ')
-print ('Fin test Serial... ')
+print('--------------------')
+print('Fin test Serial... ')
+print('--------------------')
 print ( ' ' )
 
 #---- SENSOR TEST USING ARDUCOPTER ----#
+print('---------------------------')
 print('Comprobando sensores SPI...')
+print('---------------------------')
 print (' ')
 #f=os.popen('sudo ./ArduCopter.elf > test_out.txt')
 f=os.popen('sudo ../ROS_HAT/ArduCopter.elf > test_out.txt')
@@ -101,13 +112,13 @@ time.sleep(8)
 #Check for errors
 
 if 'MPU9250: unexpected WHOAMI' in open('test_out.txt').read():
-        print "+MPU9250: No Funciona"
+        print colored('+MPU9250: No Funciona','red')
 
 if 'Bad CRC on MS5611' in open('test_out.txt').read():
-	print "+MS5611: No Funciona"
+	print colored('+MS5611: No Funciona','red')
 
 if 'Ready to FLY' in open('test_out.txt').read():
-	print "+MPU02950 OK, MS5611 OK"
+	print colored('+MPU9250 OK, MS5611 OK','green')
 print (' ')
 
 #Kill ArduCOpter, after txt
@@ -121,6 +132,7 @@ f=os.popen('rm i2ctest.txt')
 f=os.popen('rm ttyAMA0.txt')
 
 #------ TEST PCA9685 ----#
+print ('-------------------')
 print ('Test salidas PWM...')
 print ('-------------------')
 print ('')
@@ -131,11 +143,11 @@ f=os.popen('sudo ../ROS_HAT/PCA9685_PWM')
 time.sleep(10)
 f=os.popen('sudo killall -9 PCA9685_PWM')
 print('Si el servomotor ha girado, salidas PWM OK')
-print ('Si no, revisar PCA9685 (U706)')
+print colored('Si no, revisar PCA9685 (U706)','red')
 print('')
 time.sleep(2)
-print ('------------')
-print ('|FIN test PWM| ')
+print ('-------------')
+print ('FIN test PWM ')
 print ('-------------')
 print ('')
 time.sleep(1)
