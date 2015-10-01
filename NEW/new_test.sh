@@ -1,4 +1,5 @@
 #!/bin/bash
+
 clear
 echo "Conecte el GPS al conector I2C (4 pins) y el conector serial (6 pines) al UART..."
 echo "Conecte el servo-motor al canal1, con el cable amarillo o blanco hacia arriba."
@@ -14,21 +15,27 @@ I2C=`cat i2ctest | grep 1e`
 if [ -n "$I2C" ]; then
 	echo "I2c EXTERNO OK"
 else
+	tput setaf 1
 	echo "I2C EXTERNO MAL, REVISAR PCA9306-U303"
+	tput sgr0
 fi
 #-----------------
 PCA9685=`cat i2ctest | grep 40`
 if [ -n "$PCA9685" ]; then
 	echo "PCA9685 DETECTADO"
 else
+	tput setaf 1
 	echo "REVISAR PCA9685-U706, NO DETECTADO"
+	tput sgr0
 fi
 #-----------------
 ADS1115=`cat i2ctest | grep 48`
 if [ -n "$ADS1115" ]; then
 	echo "ADS1115 DETECTADO"
 else
+	tput setaf 1
 	echo "REVISAR ADS1115-U404, NO DETECTADO"
+	tput sgr0
 fi
 #----------------
 echo "------------------------"
@@ -49,7 +56,9 @@ killall -9 cat 2> /dev/null
 ttySize=`stat -c %s ttyAMA0_output`
 
 if [ $ttySize -eq 0 ]; then
+	tput setaf 1
 	echo "REVISAR UART"
+	tput sgr0
 else
 	echo "UART OK"
 fi
@@ -69,11 +78,15 @@ MPU9250=`cat test_ArduCopter | grep -a WHOAMI`
 MS611=`cat test_ArduCopter | grep -a CRC`
 ALLOK=`cat test_ArduCopter | grep -a FLY`
 if [ -n "$MPU9250" ]; then
+	tput setaf 1
 	echo "MPU9250: NO FUNCIONA"
+	tput sgr0
 fi
 
 if [ -n "$MS611" ]; then
+	tput setaf 1
 	echo "MS611: NO FUNCIONA"
+	tput sgr0
 fi
 
 if [ -n "$ALLOK" ]; then
@@ -99,7 +112,9 @@ sleep 6
 `sudo killall -9 PCA9685_PWM 2> /dev/null`
 echo ""
 echo "SI EL SERVMOTOR HA GIRADO, SALIDAS PWM OK"
+tput setaf 1
 echo "SI EL SERVOMOTOR NO HA GIRADO, REVISAR PCA9685 (U706)"
+tput sgr0
 echo ""
 sleep 2
 echo "------------------------"
