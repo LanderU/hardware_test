@@ -30,7 +30,7 @@ while line!="":
         else:
 		validate=1
              	line=file.readline()
-
+file.close()
 if validate==0:
         print colored('+ I2C EXTERNO OK','green')
 	print (' ')
@@ -47,7 +47,7 @@ while line!="":
         else:
                 validate=1
                 line=file.readline()
-
+file.close()
 if validate==0:
         print colored('+ PCA9685 detectado', 'green')
 	print (' ')
@@ -64,7 +64,7 @@ while line!="":
         else:
                 validate=1
                 line=file.readline()
-
+file.close()
 if validate==0:
         print colored('+ ADS1115 detectado','green')
 	print (' ')
@@ -77,9 +77,9 @@ print('------------------------------')
 print (' ')
 
 #---------- UART ---------#
-#print ('Conecta el cable de 6 pines al conector UART, y pulsa INTRO...')
+print ('Conecta el cable de 6 pines al conector UART, y pulsa INTRO...')
+key=sys.stdin.read(1)
 
-#key=sys.stdin.read(1)
 print('----------------------------')
 print(' Test de conector Serial...')
 print('----------------------------')
@@ -137,7 +137,8 @@ print ('Test salidas PWM...')
 print ('-------------------')
 print ('')
 time.sleep(5)
-#key2=sys.stdin.read(1)
+print('Pulse intro para continuar...')
+key=sys.stdin.read(1)
 #f=os.popen('sudo ./PCA9685_PWM')
 f=os.popen('sudo ../ROS_HAT/PCA9685_PWM')
 time.sleep(10)
