@@ -1,5 +1,25 @@
 #!/bin/bash
+: '
+	Maintener Lander Usategui e-mail: lander@erlerobot.com
+'
+###########################
+##########FUNCTIONS########
+###########################
+redColor(){
+	tput setaf 1
+} # End red color
 
+greenColor(){
+	tput setaf 2 
+} # End green color
+
+resetColor(){
+	tput sgr 0
+} # End Reset color
+###########################
+##########################
+TEST_PATH="/home/erle/hardware_test/NEW"
+PATH2="/home/pi/Desktop"
 clear
 echo "Conecte el GPS al conector I2C (4 pins) y el conector serial (6 pines) al UART..."
 echo "Conecte el servo-motor al canal1, con el cable amarillo o blanco hacia arriba."
@@ -9,39 +29,51 @@ echo "-------------------------"
 echo "Detectando sensores I2C"
 echo "------------------------"
 
-i2cdetect -y 1 > i2ctest
+`sudo i2cdetect -y 1 > /home/pi/Desktop/i2ctest`
 sleep 2
-I2C=`cat i2ctest | grep 1e`
+I2C=`cat $PATH2/i2ctest | grep 1e`
 if [ -n "$I2C" ]; then
-	tput setaf 2
+#	tput setaf 2
+	greenColor
 	echo "I2c EXTERNO OK"
-	tput sgr0
+#	tput sgr0
+	resetColor
 else
-	tput setaf 1
+#	tput setaf 1
+	redColor
 	echo "I2C EXTERNO MAL, REVISAR PCA9306-U303"
-	tput sgr0
+#	tput sgr0
+	resetColor
 fi
 #-----------------
-PCA9685=`cat i2ctest | grep 40`
+PCA9685=`cat $PATH2/i2ctest | grep 40`
 if [ -n "$PCA9685" ]; then
-	tput setaf 2
+#	tput setaf 2
+	greenColor
 	echo "PCA9685 DETECTADO"
-	tput sgr0
+	resetColor
+#	tput sgr0
 else
-	tput setaf 1
+#	tput setaf 1
+	redColor
 	echo "REVISAR PCA9685-U706, NO DETECTADO"
-	tput sgr0
+#	tput sgr0
+	resetColor
 fi
 #-----------------
-ADS1115=`cat i2ctest | grep 48`
+ADS1115=`cat $PATH2/i2ctest | grep 48`
 if [ -n "$ADS1115" ]; then
-	tput setaf 2
+#	tput setaf 2
+	greenColor
 	echo "ADS1115 DETECTADO"
-	tput sgr0
+#	tput sgr0
+	resetColor
 else
-	tput setaf 1
+#	tput setaf 1
+	redColor
 	echo "REVISAR ADS1115-U404, NO DETECTADO"
-	tput sgr0
+#	tput sgr0
+	resetColor
 fi
 #----------------
 echo "------------------------"
@@ -56,19 +88,23 @@ echo "Comprobando el puerto Serial"
 echo "------------------------"
 
 
-sudo cat /dev/ttyAMA0 > ttyAMA0_output &
+sudo cat /dev/ttyAMA0 > $PATH2/ttyAMA0_output &
 sleep 8
-killall -9 cat 2> /dev/null
-ttySize=`stat -c %s ttyAMA0_output`
+`sudo killall -9 cat 2> /dev/null`
+ttySize=`stat -c %s $PATH2/ttyAMA0_output`
 
 if [ $ttySize -eq 0 ]; then
-	tput setaf 1
+#	tput setaf 1
+	redColor
 	echo "REVISAR UART"
-	tput sgr0
+#	tput sgr0
+	resetColor
 else
-	tput setaf 2
+#	tput setaf 2
+	greenColor
 	echo "UART OK"
-	tput sgr0
+#	tput sgr0
+	resetColor
 fi
 echo ""
 echo "------------------------"
@@ -80,35 +116,64 @@ clear
 echo "------------------------"
 echo "Comprobando sensores SPI"
 echo "------------------------"
-sudo /home/pi/ROS_HAT/ArduCopter.elf > test_ArduCopter &
+sudo $TEST_PATH/ArduCopter.elf > $PATH2/test_ArduCopter &
 sleep 10
-MPU9250=`cat test_ArduCopter | grep -a WHOAMI`
-MS611=`cat test_ArduCopter | grep -a CRC`
-ALLOK=`cat test_ArduCopter | grep -a FLY`
-if [ -n "$MPU9250" ]; then
-	tput setaf 1
-	echo "MPU9250: NO FUNCIONA"
-	tput sgr0
-fi
-
-if [ -n "$MS611" ]; then
-	tput setaf 1
-	echo "MS611: NO FUNCIONA"
-	tput sgr0
-fi
-
+MPU9250=`cat $PATH2/test_ArduCopter | grep -a WHOAMI`
+MS611=`cat $PATH2/test_ArduCopter | grep -a CRC`
+ALLOK=`cat $PATH2/test_ArduCopter | grep -a FLY`
 if [ -n "$ALLOK" ]; then
-	tput setaf 2
+	greenColor
 	echo "MPU9250 OK"
 	echo "MS5611 OK"
-	tput sgr0
+	resetColor
+elif [ -n "$MPU9250" ]; then
+	redColor
+	echo "MPU9250: NO FUNCIONA"
+	resetColor
+elif [ -n "$MS611" ]; then
+	redColor
+	echo "MS611: NO FUNCIONA"
+	resetColor
 fi
 
 sleep 2
-sudo killall -9 ArduCopter.elf 2> /dev/null
-`sudo rm -rf test_ArduCopter` 
-`sudo rm -rf ttyAMA0_output`
-`sudo rm -rf i2ctest`
+while :; do
+ 
+	if [ "`ps -e | grep ArduCopter.elf 2>/dev/null`" ]; then
+		echo "Matando procesos"
+		`sudo killall -9 ArduCopter.elf 2> /dev/null`
+	else
+		break
+	fi
+done
+
+while :; do
+
+	if [ "`ls $PATH2/test_ArduCopter 2>/dev/null`" ]; then
+		echo "Borrando archivos temporales"
+		`sudo rm -rf $PATH2/test_ArduCopter` 
+
+	else
+		break
+	fi
+done
+while :; do
+
+	if [ "`ls $PATH2/ttyAMA0_output 2>/dev/null`" ]; then
+		echo "Borrando archivos temporales"
+		`sudo rm -rf $PATH2/ttyAMA0_output`
+	else
+		break
+	fi
+done
+while :; do
+	if [ "`ls $PATH2/i2ctest 2>/dev/null`" ]; then 
+		echo "Borrando archivos temporales"
+		`sudo rm -rf $PATH2/i2ctest`
+	else
+		break
+	fi
+done
 echo "------------------------"
 echo "Fin test sensores SPI"
 echo "------------------------"
@@ -117,17 +182,24 @@ clear
 echo "------------------------"
 echo "Test salidas PWM"
 echo "------------------------"
-sudo /home/pi/ROS_HAT/PCA9685_PWM &
 sleep 6
-`sudo killall -9 PCA9685_PWM 2> /dev/null`
+sudo $TEST_PATH/PCA9685_PWM &
+while :; do
+	if [ "`ps -e | grep PCA9685_PWM 2>/dev/null`" ]; then
+		echo "Matando los procesos"
+		`sudo killall -9 PCA9685_PWM 2> /dev/null`
+	else
+		break
+	fi
+done
 echo ""
-tput setaf 2
+greenColor
 echo "SI EL SERVMOTOR HA GIRADO, SALIDAS PWM OK"
-tput sgr0
+resetColor
 echo ""
-tput setaf 1
+redColor
 echo "SI EL SERVOMOTOR NO HA GIRADO, REVISAR PCA9685 (U706)"
-tput sgr0
+resetColor
 echo ""
 sleep 2
 echo "------------------------"
