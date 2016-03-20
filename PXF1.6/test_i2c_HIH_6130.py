@@ -40,4 +40,3 @@ def main():
     print 'User cancelled...'
 if __name__ == '__main__':
   main()
-  print 'Alex'
