@@ -134,13 +134,16 @@ elif [ -n "$MS611" ]; then
 	redColor
 	echo "MS611: NO FUNCIONA"
 	resetColor
+else
+	resetColor
+	echo "MS5611 o MPU9250 no funcionan"
 fi
 
 sleep 2
 while :; do
  
 	if [ "`ps -e | grep ArduCopter.elf 2>/dev/null`" ]; then
-		echo "Matando procesos"
+#		echo "Matando procesos"
 		`sudo killall -9 ArduCopter.elf 2> /dev/null`
 	else
 		break
@@ -150,7 +153,7 @@ done
 while :; do
 
 	if [ "`ls $PATH2/test_ArduCopter 2>/dev/null`" ]; then
-		echo "Borrando archivos temporales"
+#		echo "Borrando archivos temporales"
 		`sudo rm -rf $PATH2/test_ArduCopter` 
 
 	else
@@ -160,7 +163,7 @@ done
 while :; do
 
 	if [ "`ls $PATH2/ttyAMA0_output 2>/dev/null`" ]; then
-		echo "Borrando archivos temporales"
+#		echo "Borrando archivos temporales"
 		`sudo rm -rf $PATH2/ttyAMA0_output`
 	else
 		break
@@ -168,7 +171,7 @@ while :; do
 done
 while :; do
 	if [ "`ls $PATH2/i2ctest 2>/dev/null`" ]; then 
-		echo "Borrando archivos temporales"
+#		echo "Borrando archivos temporales"
 		`sudo rm -rf $PATH2/i2ctest`
 	else
 		break
@@ -186,7 +189,7 @@ sleep 6
 sudo $TEST_PATH/PCA9685_PWM &
 while :; do
 	if [ "`ps -e | grep PCA9685_PWM 2>/dev/null`" ]; then
-		echo "Matando los procesos"
+#		echo "Matando los procesos"
 		`sudo killall -9 PCA9685_PWM 2> /dev/null`
 	else
 		break
