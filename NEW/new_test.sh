@@ -135,8 +135,9 @@ elif [ -n "$MS611" ]; then
 	echo "MS611: NO FUNCIONA"
 	resetColor
 else
-	resetColor
+	redColor
 	echo "MS5611 o MPU9250 no funcionan"
+	resetColor
 fi
 
 sleep 2
