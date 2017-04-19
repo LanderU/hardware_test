@@ -43,9 +43,10 @@ clear
 echo "Conecte el GPS al conector I2C (4 pins) y el conector serial (6 pines) al UART..."
 echo "Conecte el servo-motor al canal1, con el cable amarillo o blanco hacia arriba."
 read -p "Pulse intro para continuar... " p
+
 echo -e "Prueba de LED, el orden de los LEDs es el siguiente:\n1-Amarrillo\n2-Ambar\n3-Azúl"
-#Blue
 sudo -s <<EOF
+#Blue
 echo "25" > /sys/class/gpio/export 2>/dev/null
 echo "out" > /sys/class/gpio/gpio25/direction 2>/dev/null
 echo "Luz azúl (LED número 3) encendida"
