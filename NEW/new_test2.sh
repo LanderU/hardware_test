@@ -1,6 +1,6 @@
 #!/bin/bash
 : '
-	Maintener Lander Usategui e-mail: lander@erlerobot.com
+	Maintener Lander Usategui e-mail: lander@erlerobotics.com
 		  Iñigo Muguruza e-mail:  inigo@erlerobotics.com
 '
 ###########################
@@ -11,7 +11,7 @@ redColor(){
 } # End red color
 
 greenColor(){
-	tput setaf 2 
+	tput setaf 2
 } # End green color
 
 resetColor(){
@@ -43,6 +43,25 @@ clear
 echo "Conecte el GPS al conector I2C (4 pins) y el conector serial (6 pines) al UART..."
 echo "Conecte el servo-motor al canal1, con el cable amarillo o blanco hacia arriba."
 read -p "Pulse intro para continuar... " p
+echo -e "Prueba de LED, el orden de los LEDs es el siguiente:\n1-Amarrillo\n2-Ambar\n3-Azúl"
+#Blue
+sudo -s <<EOF
+echo "25" > /sys/class/gpio/export 2>/dev/null
+echo "out" > /sys/class/gpio/gpio25/direction 2>/dev/null
+echo "Luz azúl (LED número 3) encendida"
+echo "0" > /sys/class/gpio/gpio25/value 2>/dev/null
+/bin/sleep 3
+echo "Luz azúl (LED número 3) apagada"
+echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
+#Ambar
+echo "24" > /sys/class/gpio/export 2>/dev/null
+echo "out" > /sys/class/gpio/gpio24/direction 2>/dev/null
+echo "Luz ambar (LED número 2) encendida"
+echo "0" > /sys/class/gpio/gpio24/value 2>/dev/null
+/bin/sleep 3
+echo "Luz ambar (LED número 2) apagada"
+echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
+EOF
 clear
 echo "-------------------------"
 echo "Detectando sensores I2C"
@@ -161,7 +180,7 @@ fi
 
 sleep 2
 while :; do
- 
+
 	if [ "`ps -e | grep ArduCopter.elf 2>/dev/null`" ]; then
 #		echo "Matando procesos"
 		`sudo killall -9 ArduCopter.elf 2> /dev/null`
@@ -174,7 +193,7 @@ while :; do
 
 	if [ "`ls $PATH2/test_ArduCopter 2>/dev/null`" ]; then
 #		echo "Borrando archivos temporales"
-		`sudo rm -rf $PATH2/test_ArduCopter` 
+		`sudo rm -rf $PATH2/test_ArduCopter`
 
 	else
 		break
@@ -190,7 +209,7 @@ while :; do
 	fi
 done
 while :; do
-	if [ "`ls $PATH2/i2ctest 2>/dev/null`" ]; then 
+	if [ "`ls $PATH2/i2ctest 2>/dev/null`" ]; then
 #		echo "Borrando archivos temporales"
 		`sudo rm -rf $PATH2/i2ctest`
 	else
