@@ -43,26 +43,47 @@ clear
 echo "Conecte el GPS al conector I2C (4 pins) y el conector serial (6 pines) al UART..."
 echo "Conecte el servo-motor al canal1, con el cable amarillo o blanco hacia arriba."
 read -p "Pulse intro para continuar... " p
-
-echo -e "Prueba de LED, el orden de los LEDs es el siguiente:\n1-Amarrillo\n2-Ambar\n3-Azúl"
+clear
+clear
+echo "-------------------------"
+echo "TEST DE LEDS"
+echo "------------------------"
+echo -e "Prueba de LED, el orden de los LEDs es el siguiente:\n1-Amarrillo\n2-Ámbar\n3-Azul"
 sudo -s <<EOF
 #Blue
 echo "25" > /sys/class/gpio/export 2>/dev/null
 echo "out" > /sys/class/gpio/gpio25/direction 2>/dev/null
-echo "Luz azúl (LED número 3) encendida"
-echo "0" > /sys/class/gpio/gpio25/value 2>/dev/null
-/bin/sleep 3
-echo "Luz azúl (LED número 3) apagada"
-echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
-#Ambar
 echo "24" > /sys/class/gpio/export 2>/dev/null
 echo "out" > /sys/class/gpio/gpio24/direction 2>/dev/null
-echo "Luz ambar (LED número 2) encendida"
+echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
+echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
+EOF
+read -p "Pulse intro para encender el LED azul... " p
+echo "Luz azul (LED número 3) encendida"
+sudo -s <<EOF
+echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
+echo "0" > /sys/class/gpio/gpio25/value 2>/dev/null
+EOF
+read -p "Pulsa intro para apagar el LED azul..." p
+echo "Luz azul (LED número 3) apagada"
+sudo -s <<EOF
+echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
+read -p "Pulse intro para encender el ambar... " p
+echo "Luz ámbar (LED número 2) encendida"
+sudo -s <<EOF
 echo "0" > /sys/class/gpio/gpio24/value 2>/dev/null
-/bin/sleep 3
-echo "Luz ambar (LED número 2) apagada"
+EOF
+read -p "Pulse intro para apagar atenuar el LED... " p
+echo "Luz ámbar (LED número 2) atenuada"
+sudo -s <<EOF
 echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
 EOF
+echo "------------------------"
+echo "FIN TEST DE LEDS"
+echo "------------------------"
+echo ""
+read -p "Pulse intro para continuar... " p
+
 clear
 echo "-------------------------"
 echo "Detectando sensores I2C"
