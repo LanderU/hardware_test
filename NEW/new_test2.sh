@@ -50,7 +50,6 @@ echo "TEST DE LEDS"
 echo "------------------------"
 echo -e "Prueba de LED, el orden de los LEDs es el siguiente:\n1-Amarrillo\n2-Ámbar\n3-Azul"
 sudo -s <<EOF
-#Blue
 echo "25" > /sys/class/gpio/export 2>/dev/null
 echo "out" > /sys/class/gpio/gpio25/direction 2>/dev/null
 echo "24" > /sys/class/gpio/export 2>/dev/null
@@ -68,12 +67,13 @@ read -p "Pulsa intro para apagar el LED azul..." p
 echo "Luz azul (LED número 3) apagada"
 sudo -s <<EOF
 echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
-read -p "Pulse intro para encender el ámbar... " p
+EOF
+read -p "Pulse intro para encender el ambar... " p
 echo "Luz ámbar (LED número 2) encendida"
 sudo -s <<EOF
 echo "0" > /sys/class/gpio/gpio24/value 2>/dev/null
 EOF
-read -p "Pulse intro para apagar atenuar el LED... " p
+read -p "Pulse intro para atenuar el LED... " p
 echo "Luz ámbar (LED número 2) atenuada"
 sudo -s <<EOF
 echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
