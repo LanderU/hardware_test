@@ -68,7 +68,7 @@ read -p "Pulsa intro para apagar el LED azul..." p
 echo "Luz azul (LED número 3) apagada"
 sudo -s <<EOF
 echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
-read -p "Pulse intro para encender el ambar... " p
+read -p "Pulse intro para encender el ámbar... " p
 echo "Luz ámbar (LED número 2) encendida"
 sudo -s <<EOF
 echo "0" > /sys/class/gpio/gpio24/value 2>/dev/null
