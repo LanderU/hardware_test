@@ -57,24 +57,49 @@ echo "out" > /sys/class/gpio/gpio24/direction 2>/dev/null
 echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
 echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
 EOF
-read -p "Pulse intro para encender el LED azul... " p
-echo "Luz azul (LED número 3) encendida"
+read -p "Pulse intro para hacer parpadear el LED azul..." p
+
+if [ -t 0 ]; then stty -echo -icanon -icrnl time 0 min 0; fi
+
+keypress=''
+echo "Pulse intro para detener el parpadeo del LED azul"
+
+while [ "x$keypress" = "x" ]; do
 sudo -s <<EOF
-echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
 echo "0" > /sys/class/gpio/gpio25/value 2>/dev/null
+/bin/sleep 3
+echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
+/bin/sleep 3
 EOF
-read -p "Pulsa intro para apagar el LED azul..." p
-echo "Luz azul (LED número 3) apagada"
+  keypress="`cat -v`"
+done
+
+if [ -t 0 ]; then stty sane; fi
+
+#Apagar LED azul
 sudo -s <<EOF
 echo "1" > /sys/class/gpio/gpio25/value 2>/dev/null
 EOF
-read -p "Pulse intro para encender el ambar... " p
-echo "Luz ámbar (LED número 2) encendida"
+
+if [ -t 0 ]; then stty -echo -icanon -icrnl time 0 min 0; fi
+
+keypress=''
+
+echo "Parpadeando el LED ámbar, pulse intro para detener parpadeo del LED ámbar"
+
+while [ "x$keypress" = "x" ]; do
 sudo -s <<EOF
 echo "0" > /sys/class/gpio/gpio24/value 2>/dev/null
+/bin/sleep 3
+echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
+/bin/sleep 3
 EOF
-read -p "Pulse intro para atenuar el LED... " p
-echo "Luz ámbar (LED número 2) atenuada"
+  keypress="`cat -v`"
+done
+
+if [ -t 0 ]; then stty sane; fi
+
+#Atenuar LED ámbar
 sudo -s <<EOF
 echo "1" > /sys/class/gpio/gpio24/value 2>/dev/null
 EOF
